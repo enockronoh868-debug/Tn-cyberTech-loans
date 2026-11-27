@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TN CyberTech Loans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { margin: 0; background-color: #f8f8f8; display: flex; justify-content: center; min-height: 100vh; }
+        .app-container { width: 100%; max-width: 400px; background: white; min-height: 100vh; padding-bottom: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        
+        .header { padding: 15px 20px; border-bottom: 2px solid #FFD700; display: flex; justify-content: space-between; align-items: center; }
+        
+        .logo-container { display: flex; align-items: center; gap: 5px; }
+        .icon { position: relative; width: 30px; height: 30px; }
+        .sq { position: absolute; background: linear-gradient(135deg, #FFD700, #B8860B); border-radius: 2px; }
+        .sq1 { width: 8px; height: 8px; top: 0; left: 0; }
+        .sq2 { width: 8px; height: 8px; top: 10px; left: 0; }
+        .sq3 { width: 8px; height: 8px; top: 4px; left: 10px; }
+        .u-shape { position: absolute; width: 18px; height: 22px; bottom: 0; right: 0; border-left: 5px solid #FFD700; border-bottom: 5px solid #FFD700; border-bottom-left-radius: 8px; border-right: 5px solid #FFD700; border-top: 5px solid #FFD700; border-top-right-radius: 8px; }
+        .text-container { display: flex; flex-direction: column; align-items: flex-start; }
+        .text-tn { font-size: 12px; font-weight: 900; color: #000; line-height: 1; }
+        .text-cyber { font-size: 14px; font-weight: 900; color: #000; line-height: 1; }
+        .text-bank { font-size: 8px; color: #000; }
+
+        .content { padding: 20px; }
+        .title { text-align: center; margin-bottom: 20px; font-size: 20px; color: #000; font-weight: 700; }
+        .title span { color: #B8860B; }
+
+        .calc-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        
+        .slider-section { text-align: center; margin-bottom: 25px; }
+        .slider-label { font-size: 11px; font-weight: 600; color: #666; text-transform: uppercase; margin-bottom: 10px; }
+        .slider-value { font-size: 28px; font-weight: 700; color: #000; margin-bottom: 10px; }
+        
+        input[type=range] { width: 100%; -webkit-appearance: none; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: white; border: 3px solid #B8860B; cursor: pointer; margin-top: -10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: #B8860B; border-radius: 2px; }
+        
+        .slider-limits { display: flex; justify-content: space-between; font-size: 10px; color: #888; margin-top: 5px; }
+
+        .result-box { background: #fdfbf7; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; border: 1px solid #f0e6d2; }
+        .result-label { font-size: 11px; font-weight: 600; color: #666; letter-spacing: 1px; margin-bottom: 5px; }
+        .result-value { font-size: 28px; font-weight: 700; color: #B8860B; }
+
+        .btn-main { width: 100%; background: linear-gradient(90deg, #D4AF37, #FFDF00, #D4AF37); color: #000; font-size: 14px; font-weight: 700; padding: 16px; border: none; border-radius: 8px; cursor: pointer; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="logo-container">
+                <div class="icon">
+                    <div class="sq sq1"></div>
+                    <div class="sq sq2"></div>
+                    <div class="sq sq3"></div>
+                    <div class="u-shape"></div>
+                </div>
+                <div class="text-container">
+                    <div class="text-tn">TN</div>
+                    <div class="text-cyber">CyberTech</div>
+                    <div class="text-bank">Bank Limited</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="title">Loan Calculator</div>
+
+            <div class="calc-card">
+                <div class="slider-section">
+                    <div class="slider-label">LOAN AMOUNT</div>
+                    <div class="slider-value" id="amountDisplay">$5,000</div>
+                    <input type="range" id="amountSlider" min="500" max="50000" step="500" value="5000" oninput="calculate()">
+                    <div class="slider-limits"><span>$500</span><span>$50,000</span></div>
+                </div>
+
+                <div class="slider-section">
+                    <div class="slider-label">LOAN TERM (MONTHS)</div>
+                    <div class="slider-value" id="termDisplay" style="font-size: 20px;">12</div>
+                    <input type="range" id="termSlider" min="3" max="24" step="3" value="12" oninput="calculate()">
+                    <div class="slider-limits"><span>3</span><span>24</span></div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-label">MONTHLY PAYMENT</div>
+                    <div class="result-value" id="paymentDisplay">$0.00</div>
+                </div>
+
+                <button class="btn-main" onclick="window.location.href='welcome.html'">APPLY NOW</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            let amount = parseFloat(document.getElementById('amountSlider').value);
+            let term = parseFloat(document.getElementById('termSlider').value);
+            
+            document.getElementById('amountDisplay').innerText = '$' + amount.toLocaleString();
+            document.getElementById('termDisplay').innerText = term;
+
+            let rate = 0.045 / 12; 
+            let payment = amount * rate * Math.pow(1 + rate, term) / (Math.pow(1 + rate, term) - 1);
+            
+            document.getElementById('paymentDisplay').innerText = '$' + payment.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+        calculate();
+    </script>
+</body>
+  </html>
